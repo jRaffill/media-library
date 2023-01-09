@@ -1,4 +1,5 @@
 import os
+import hashlib
 
 oldpath = "test-dir/"
 newpath = "test-dir-copy/"
@@ -16,8 +17,6 @@ for i in os.walk(oldpath):
       print("Original file " + root + "/" + file)
       oldfiles += [file]
       oldroots += [root]
-print(oldfiles)
-print(oldroots)
 
 for i in os.walk(newpath):
   root = i[0]
@@ -27,25 +26,31 @@ for i in os.walk(newpath):
       print("Copied file " + root + "/" + file)
       newfiles += [file]
       newroots += [root]
-print(newfiles)
-print(newroots)
 
 print("------------------------")
 
 newindex = 0
 missingfiles = []
-missingroots = []
+
 for file in oldfiles:
   root = oldroots[oldfiles.index(file)]
   newfile = newfiles[newindex]
+  filepath = os.path.join(root, file)
   if (file == newfile):
     print("Found a match between original file " + file + " and new file " + newfile)
     newindex += 1
   elif (file in newfile):
-    print("Found a possible match between original file " + file + " and new file " + newfile)
-    newindex += 1
+    newfilepath = os.path.join(newroots[newindex], newfile)
+    oldfilehash = hashlib.md5(open(filepath, "rb").read()).hexdigest()
+    newfilehash = hashlib.md5(open(newfilepath, "rb").read()).hexdigest()
+    if (oldfilehash == newfilehash):  
+      print("Found a match between original file " + file + " and new file " + newfile)
+      newindex += 1
+    else:
+      print("****Found missing file " + filepath + "****")
   else:
-    print("****Found missing file " + root + "/" + file + "****")
-    missingfiles += [file]
-    missingroots += [root]
+    print("****Found missing file " + filepath + "****")
+    missingfiles += [filepath]
 
+print("All missing files:")
+print(missingfiles)
