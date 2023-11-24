@@ -47,8 +47,6 @@ for file in oldfiles:
     newfilehash = hashlib.md5(open(newfilepath, "rb").read()).hexdigest()
     if (oldfilehash == newfilehash):
       print("Found a match between original file " + file + " and new file " + newfile)
-      newfiles.remove(newfile)
-      newroots.remove(newroot)
       foundmatch = True
       break
   if (not foundmatch):
