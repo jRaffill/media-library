@@ -38,16 +38,19 @@ missingfiles = []
 # Loop through both old files and new files to find matches
 for file in oldfiles:
   foundmatch = False
+  root = oldroots[oldfiles.index(file)]
+  filepath = os.path.join(root, file)
+  oldfilehash = hashlib.md5(open(filepath, "rb").read()).hexdigest()
   for newfile in newfiles:
-    root = oldroots[oldfiles.index(file)]
     newroot = newroots[newfiles.index(newfile)]
-    filepath = os.path.join(root, file)
     newfilepath = os.path.join(newroot, newfile)
-    oldfilehash = hashlib.md5(open(filepath, "rb").read()).hexdigest()
     newfilehash = hashlib.md5(open(newfilepath, "rb").read()).hexdigest()
     if (oldfilehash == newfilehash):
-      foundmatch = True
       print("Found a match between original file " + file + " and new file " + newfile)
+      newfiles.remove(newfile)
+      newroots.remove(newroot)
+      foundmatch = True
+      break
   if (not foundmatch):
     print("****Found missing file " + filepath + "****")
     missingfiles += [filepath]
