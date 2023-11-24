@@ -1,8 +1,14 @@
 import os
 import hashlib
+import argparse
 
-oldpath = "test-dir/"
-newpath = "test-dir-copy/"
+parser = argparse.ArgumentParser()
+parser.add_argument("oldpath", help="the path to the folder of the original files")
+parser.add_argument("newpath", help="the path to the folder of the copied files")
+args = parser.parse_args()
+
+oldpath = args.oldpath
+newpath = args.newpath
 
 oldfiles = []
 oldroots = []
